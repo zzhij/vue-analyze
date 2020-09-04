@@ -535,7 +535,7 @@ function unifyObjectStyle (type, payload, options) {
 
   return { type, payload, options }
 }
-
+// install 方法
 export function install (_Vue) {
   if (Vue && _Vue === Vue) { // 判断是否已经 installed
     if (__DEV__) {

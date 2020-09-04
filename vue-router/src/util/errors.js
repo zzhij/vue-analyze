@@ -1,11 +1,11 @@
 // When changing thing, also edit router.d.ts
-export const NavigationFailureType = {
+export const NavigationFailureType = { // 错误类型对象
   redirected: 2,
   aborted: 4,
   cancelled: 8,
   duplicated: 16
 }
-
+// 导航重定向错误
 export function createNavigationRedirectedError (from, to) {
   return createRouterError(
     from,
@@ -16,7 +16,7 @@ export function createNavigationRedirectedError (from, to) {
     )}" via a navigation guard.`
   )
 }
-
+// 导航重复错误
 export function createNavigationDuplicatedError (from, to) {
   const error = createRouterError(
     from,
@@ -28,7 +28,7 @@ export function createNavigationDuplicatedError (from, to) {
   error.name = 'NavigationDuplicated'
   return error
 }
-
+// 导航取消错误
 export function createNavigationCancelledError (from, to) {
   return createRouterError(
     from,
@@ -39,7 +39,7 @@ export function createNavigationCancelledError (from, to) {
     }" with a new navigation.`
   )
 }
-
+// 导航Aborted错误
 export function createNavigationAbortedError (from, to) {
   return createRouterError(
     from,
@@ -51,7 +51,7 @@ export function createNavigationAbortedError (from, to) {
   )
 }
 
-function createRouterError (from, to, type, message) {
+function createRouterError (from, to, type, message) { // 错误对象信息
   const error = new Error(message)
   error._isRouter = true
   error.from = from
@@ -62,7 +62,7 @@ function createRouterError (from, to, type, message) {
 }
 
 const propertiesToLog = ['params', 'query', 'hash']
-
+// 序列化转为字符串
 function stringifyRoute (to) {
   if (typeof to === 'string') return to
   if ('path' in to) return to.path
@@ -73,10 +73,11 @@ function stringifyRoute (to) {
   return JSON.stringify(location, null, 2)
 }
 
+// 判断是否为错误信息
 export function isError (err) {
   return Object.prototype.toString.call(err).indexOf('Error') > -1
 }
-
+// 判断是否为失败错误
 export function isNavigationFailure (err, errorType) {
   return (
     isError(err) &&

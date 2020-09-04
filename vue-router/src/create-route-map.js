@@ -71,11 +71,11 @@ function addRouteRecord (
       )} cannot be a ` + `string id. Use an actual component instead.`
     )
   }
-
+// 编译正则的选项
   const pathToRegexpOptions: PathToRegexpOptions =
     route.pathToRegexpOptions || {}
   const normalizedPath = normalizePath(path, parent, pathToRegexpOptions.strict)
-
+  // 匹配规则是否大小写敏感？(默认值：false)
   if (typeof route.caseSensitive === 'boolean') {
     pathToRegexpOptions.sensitive = route.caseSensitive
   }
@@ -125,7 +125,7 @@ function addRouteRecord (
       const childMatchAs = matchAs
         ? cleanPath(`${matchAs}/${child.path}`)
         : undefined
-      addRouteRecord(pathList, pathMap, nameMap, child, record, childMatchAs)
+      addRouteRecord(pathList, pathMap, nameMap, child, record, childMatchAs) // 递归
     })
   }
 
@@ -133,7 +133,7 @@ function addRouteRecord (
     pathList.push(record.path)
     pathMap[record.path] = record
   }
-
+  // alias别名处理
   if (route.alias !== undefined) {
     const aliases = Array.isArray(route.alias) ? route.alias : [route.alias]
     for (let i = 0; i < aliases.length; ++i) {
@@ -161,7 +161,7 @@ function addRouteRecord (
       )
     }
   }
-
+  // name处理
   if (name) {
     if (!nameMap[name]) {
       nameMap[name] = record
@@ -192,7 +192,7 @@ function compileRouteRegex (
   }
   return regex
 }
-
+// 处理path
 function normalizePath (
   path: string,
   parent?: RouteRecord,

@@ -22,7 +22,7 @@ export default function (Vue) {
   function vuexInit () {
     const options = this.$options
     // store injection
-    if (options.store) {
+    if (options.store) { // 判断是否根组件
       this.$store = typeof options.store === 'function'
         ? options.store()
         : options.store

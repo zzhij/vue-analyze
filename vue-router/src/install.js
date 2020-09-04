@@ -4,6 +4,7 @@ import Link from './components/link'
 export let _Vue
 
 export function install (Vue) { // install 方法
+  
   if (install.installed && _Vue === Vue) return
   install.installed = true // 判断是否加载
 
@@ -17,6 +18,8 @@ export function install (Vue) { // install 方法
   // NaN === NaN
   // false
 
+  console.log('获取router中的this')
+  console.log(this)
   const registerInstance = (vm, callVal) => {
     let i = vm.$options._parentVnode // 父组件节点
     if (isDef(i) && isDef(i = i.data) && isDef(i = i.registerRouteInstance)) {
@@ -26,6 +29,8 @@ export function install (Vue) { // install 方法
 
   Vue.mixin({
     beforeCreate () {
+      console.log('beforeCreate运行了')
+      // console.log(this.$options)
       if (isDef(this.$options.router)) { // 判断是否为根组件
         this._routerRoot = this // 赋值根组件
         this._router = this.$options.router // 赋值router
@@ -42,11 +47,19 @@ export function install (Vue) { // install 方法
   })
 
   Object.defineProperty(Vue.prototype, '$router', { // 双向数据 绑定
-    get () { return this._routerRoot._router }
+    get () {
+      console.log('获取了$router的值')
+      console.log(this)
+      return this._routerRoot._router
+    }
   })
 
   Object.defineProperty(Vue.prototype, '$route', { // 双向数据 绑定
-    get () { return this._routerRoot._route }
+    get () {
+      console.log('获取了$route的值')
+      console.log(this)
+      return this._routerRoot._route
+    }
   })
 
   Vue.component('RouterView', View)
@@ -55,4 +68,6 @@ export function install (Vue) { // install 方法
   const strats = Vue.config.optionMergeStrategies
   // use the same hook merging strategy for route hooks
   strats.beforeRouteEnter = strats.beforeRouteLeave = strats.beforeRouteUpdate = strats.created
+  console.log('install-router结尾了')
+  console.log(this)
 }

@@ -49,15 +49,15 @@ export default class VueRouter {
     let mode = options.mode || 'hash'
     this.fallback =
       mode === 'history' && !supportsPushState && options.fallback !== false
-    if (this.fallback) {
+    if (this.fallback) { // 当mode为history，但是浏览器不支持 转换为hash模式
       mode = 'hash'
     }
-    if (!inBrowser) {
+    if (!inBrowser) { // 如果为非浏览器环境使用abstract
       mode = 'abstract'
     }
     this.mode = mode
 
-    switch (mode) {
+    switch (mode) { // 根据mode得到不同的history
       case 'history':
         this.history = new HTML5History(this, options.base)
         break
@@ -73,35 +73,42 @@ export default class VueRouter {
         }
     }
   }
-
+  // 适配路由
   match (raw: RawLocation, current?: Route, redirectedFrom?: Location): Route {
     return this.matcher.match(raw, current, redirectedFrom)
   }
-
+  // 获取当前的路由信息
   get currentRoute (): ?Route {
     return this.history && this.history.current
   }
 
   init (app: any /* Vue component instance */) {
+    // 断言
     process.env.NODE_ENV !== 'production' &&
       assert(
         install.installed,
         `not installed. Make sure to call \`Vue.use(VueRouter)\` ` +
           `before creating root instance.`
       )
-
+    console.log('index.js文件执行')
     this.apps.push(app)
-
+    console.log('app.$once(hook:')
+    console.log(app)
     // set up app destroyed handler
     // https://github.com/vuejs/vue-router/issues/2639
-    app.$once('hook:destroyed', () => {
+    app.$once('hook:destroyed', () => { // 钩子函数 销毁 当销毁时移除当前实例对象
       // clean out app from this.apps array once destroyed
       const index = this.apps.indexOf(app)
+      console.log('app.$once(hook:destroyed')
+      console.log(app)
+      
+      
       if (index > -1) this.apps.splice(index, 1)
       // ensure we still have a main app or null if no apps
       // we do not release the router so it can be reused
       if (this.app === app) this.app = this.apps[0] || null
-
+      console.log(this.app)
+      console.log(this.history)
       if (!this.app) {
         // clean up event listeners
         // https://github.com/vuejs/vue-router/issues/2341
@@ -247,7 +254,7 @@ export default class VueRouter {
       resolved: route
     }
   }
-
+  // 添加路由
   addRoutes (routes: Array<RouteConfig>) {
     this.matcher.addRoutes(routes)
     if (this.history.current !== START) {
@@ -255,7 +262,7 @@ export default class VueRouter {
     }
   }
 }
-
+// 注册钩子函数
 function registerHook (list: Array<any>, fn: Function): Function {
   list.push(fn)
   return () => {
@@ -263,7 +270,7 @@ function registerHook (list: Array<any>, fn: Function): Function {
     if (i > -1) list.splice(i, 1)
   }
 }
-
+// 生成路径
 function createHref (base: string, fullPath: string, mode) {
   var path = mode === 'hash' ? '#' + fullPath : fullPath
   return base ? cleanPath(base + '/' + path) : path
@@ -273,7 +280,7 @@ VueRouter.install = install
 VueRouter.version = '__VERSION__'
 VueRouter.isNavigationFailure = isNavigationFailure
 VueRouter.NavigationFailureType = NavigationFailureType
-
+// 当在浏览器环境中且Vue存在 直接应用use
 if (inBrowser && window.Vue) {
   window.Vue.use(VueRouter)
 }

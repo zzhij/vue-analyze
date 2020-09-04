@@ -31,11 +31,11 @@ export default class ModuleCollection {
     }
 
     const newModule = new Module(rawModule, runtime)
-    if (path.length === 0) {
+    if (path.length === 0) { // 判断是否为根模块
       this.root = newModule
     } else {
       const parent = this.get(path.slice(0, -1))
-      parent.addChild(path[path.length - 1], newModule)
+      parent.addChild(path[path.length - 1], newModule) // 添加子模块  形成树状结构
     }
 
     // register nested modules
